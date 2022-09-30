@@ -1,7 +1,7 @@
 
 import { top, rateCalc } from './functions4homepage'
+import { randomGenerator } from './functions4HBC'
 const url = '/'
-
 beforeEach('Homepage', () => {
   cy.visit(url)
 })
@@ -82,6 +82,92 @@ it('Carreers', () => {
   })
 
   cy.get('.s-accordions__items')
+
+    .should('exist')
+    .children()
+    .each((it, index) => {
+      cy.wrap(it).click().wait(25).click()
+      index % 2 !== 0
+        ? cy.wrap(it).click()
+        : index == 0
+        ? cy.wrap(it).click()
+        : cy.wrap(it).wait(1)
+    })
+})
+it('Services', () => {
+  cy.get(':nth-child(4) > .icon > .name').click()
+  cy.get(':nth-child(16) > .icon > .name').click()
+
+  cy.location().should((loc) => {
+    expect(loc.href).to.include(loc.pathname)
+  })
+
+  rateCalc()
+})
+it('ForgotPassword', () => {
+  cy.visit(url + '/html/28.Forgot.Password.html')
+  cy.location().should((loc) => {
+    expect(loc.href).to.include(loc.pathname)
+  })
+  cy.get('form > .btn').should('exist').click().wait(35)
+
+  //Assertion ότι εμφανίζεται το div alert με το κόκκινο πλαίσιο.
+
+  cy.get('.alert').then(($div) => {
+    const text = $div.children().html()
+    expect(text).includes('Error')
+  })
+
+  cy.get('.alert')
+    .should('have.css', 'background-color')
+    .and('eq', 'rgb(248, 215, 218)')
+})
+it('Visit all routes one by one', () => {
+  cy.get(':nth-child(4) > .icon > .name').click()
+
+  //Assertions οτι δεν υπάρχει κάποιο σπασμενο link σε όλα τα routes του site θα σταματησει
+  //την επανάληψη στο προτελευταίο list item
+
+  let flag = false
+  cy.get('#wrapper')
+    .children('ul')
+    .children('li')
+    .children('a')
+    .each((item, index) => {
+      if (index != 0 && index != 30) {
+        cy.visit(url + item.attr('href'))
+          .wait(5)
+          .location()
+          .should((loc) => {
+            expect(loc.href).to.include(loc.pathname)
+          })
+      }
+    })
+})
+
+it('Visit only the routes that contain form elements', () => {
+  cy.get(':nth-child(4) > .icon > .name').click()
+  cy.get('#wrapper')
+    .children('ul')
+    .children('li')
+    .children('a')
+    .each((item) => {
+      cy.wrap(item.text()).then(() => {
+        if (item.text().includes('Login') || item.text().includes('Register')) {
+          cy.log(`got ${item}`)
+          cy.visit(url + item.attr('href'))
+          cy.get('input').each((input, index) => {
+            if (
+              input.attr('type') == 'text' ||
+              input.attr('type') == 'password'
+            )
+              cy.wrap(input).scrollIntoView().type(randomGenerator(index))
+          })
+        }
+      })
+    })
+})
+
   .should('exist')
   .children()
   .each((it,index)=>{
@@ -106,3 +192,4 @@ it.only('Services', () => {
   rateCalc()
   
 });
+

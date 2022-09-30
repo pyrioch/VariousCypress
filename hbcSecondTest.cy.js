@@ -9,7 +9,7 @@ const baseUrl = 'http://localhost:3000/html'
 const url = '/'
 
 beforeEach(() => {
-  cy.visit(url)
+  cy.visit(url+'/html')
 })
 
 it('hbcSecondTest', () => {
@@ -74,9 +74,7 @@ it('InterestformCheck', () => {
         'contain',
         itm.siblings().text()
       )
-
       //Συνθήκη ανα case
-
       if (index %2 !=0) {
         cy.wrap(itm).type(randomGenerator(index))
       }

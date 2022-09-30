@@ -49,7 +49,7 @@ function rateCalc() {
     .type(randAmount())
       
   function randAmount() {
-    return 500 * (Math.random() + 1)
+    return 500 * Math.round((Math.random() + 1),3)
   }
 }
 export { top, rateCalc }
