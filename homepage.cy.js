@@ -122,6 +122,7 @@ it('ForgotPassword', () => {
     .should('have.css', 'background-color')
     .and('eq', 'rgb(248, 215, 218)')
 })
+
 it('Visit all routes one by one', () => {
   cy.get(':nth-child(4) > .icon > .name').click()
 
@@ -168,16 +169,7 @@ it('Visit only the routes that contain form elements', () => {
     })
 })
 
-  .should('exist')
-  .children()
-  .each((it,index)=>{
-    cy.wrap(it)
-    .click()
-    .wait(25)
-    .click()
-    index%2!==0?cy.wrap(it).click():index==0?cy.wrap(it).click():cy.wrap(it).wait(1)
-  })
-})
+
 it.only('Services', () => {
 
   cy.get(':nth-child(4) > .icon > .name')
