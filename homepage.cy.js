@@ -1,7 +1,7 @@
+
 import { top, rateCalc } from './functions4homepage'
 import { randomGenerator } from './functions4HBC'
 const url = '/'
-
 beforeEach('Homepage', () => {
   cy.visit(url)
 })
@@ -82,6 +82,7 @@ it('Carreers', () => {
   })
 
   cy.get('.s-accordions__items')
+
     .should('exist')
     .children()
     .each((it, index) => {
@@ -166,3 +167,29 @@ it('Visit only the routes that contain form elements', () => {
       })
     })
 })
+
+  .should('exist')
+  .children()
+  .each((it,index)=>{
+    cy.wrap(it)
+    .click()
+    .wait(25)
+    .click()
+    index%2!==0?cy.wrap(it).click():index==0?cy.wrap(it).click():cy.wrap(it).wait(1)
+  })
+})
+it.only('Services', () => {
+
+  cy.get(':nth-child(4) > .icon > .name')
+  .click()
+  cy.get(':nth-child(16) > .icon > .name')
+  .click()
+
+   cy.location().should((loc) => {
+    expect(loc.href).to.include(loc.pathname)
+  })
+
+  rateCalc()
+  
+});
+
